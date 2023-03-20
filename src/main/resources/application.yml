@@ -1,0 +1,7 @@
+spring:
+  myredis:
+    host: 124.222.105.141
+    port: 6390
+    password: 15124700216
+    timeout: 2000
+    maxTotal: 20
