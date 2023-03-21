@@ -1,7 +1,19 @@
 spring:
-  myredis:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://124.222.105.141:3306/security
+    username: linuxroot
+    password: 15124700216
+  jedis:
     host: 124.222.105.141
     port: 6390
     password: 15124700216
     timeout: 2000
     maxTotal: 20
+app:
+  auth:
+    token:
+      secret: asdacaeAWD3
+      expires: 8
+      issue: yangxinyu.com
+
