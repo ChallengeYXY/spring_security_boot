@@ -4,10 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.InvalidClaimException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.exceptions.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.yangxinyu.app.auth.config.TokenProperties;
 import com.yangxinyu.app.auth.entity.CurrentUser;
@@ -27,7 +24,7 @@ public class TokenUtils {
     /**
      * token在请求头重的名称
      */
-    private static final String AUTH_KEY = "Authorization";
+    public static final String AUTH_KEY = "Authorization";
 
     /**
      * 对盐进行加密
@@ -51,7 +48,7 @@ public class TokenUtils {
     /**
      * 创建token
      * @param props
-     * @param user
+     * @param currentUser
      * @return
      */
     public static String createToken(TokenProperties props, CurrentUser currentUser) {
@@ -71,7 +68,12 @@ public class TokenUtils {
      */
     public static CurrentUser fromToken(TokenProperties props, String token) {
         DecodedJWT decodedJWT = verify(props, token);
-        return CurrentUser.builder().id(decodedJWT.getClaim("uid").asInt()).build();
+        try {
+            return CurrentUser.builder().id(decodedJWT.getClaim("uid").as(Integer.class)).build();
+        } catch (NullPointerException e) {
+            log.error("Token解码失败导致无法获取token信息！");
+        }
+        return null;
     }
 
     /**
@@ -86,14 +88,11 @@ public class TokenUtils {
                 .build();
         try {
             DecodedJWT jwt = verifier.verify(token);
-            Objects.requireNonNull(jwt.getClaim("uid").asInt());
             return jwt;
         } catch (TokenExpiredException ex) {
             log.info("Token已经失效::{},{}", ex.getMessage(), token);
         } catch (AlgorithmMismatchException | SignatureVerificationException | InvalidClaimException ex) {
             log.warn("Token签名校验失败::{},{}", ex.getMessage(), token);
-        } catch (NullPointerException e){
-            log.warn("Token所含信息有误::{}{}",e.getMessage(),token);
         } catch (Exception ex) {
             log.error("Token解码失败::{}, {}", ex.getMessage(), token);
         }

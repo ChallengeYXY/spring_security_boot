@@ -1,12 +1,14 @@
 package com.yangxinyu.app.entity;
+
+import lombok.Data;
+
 /**
- * @BelongsProject : spring_security_boot
- * @BelongsPackage : com.yangxinyu.app.entity
  * @Date : 2023/3/21 16:27
  * @Author : 星宇
  * @Description :
  */
 
+@Data
 public class Result<T> {
     private Integer code;
     private String message;
@@ -23,10 +25,10 @@ public class Result<T> {
         this.message = message;
     }
 
-    public static <R> Result<R> ok(R data){
-        return new Result<R>(200,"成功！",data);
+    public static <R> Result<R> ok(Integer code,String message,R data){
+        return new Result<R>(code,message,data);
     }
-    public static Result err(){
-        return new Result(500,"失败");
+    public static Result err(Integer code,String message){
+        return new Result(code,message);
     }
 }

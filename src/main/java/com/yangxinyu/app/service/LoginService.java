@@ -10,5 +10,5 @@ import com.yangxinyu.app.entity.Student;
  * @Description :
  */
 public interface LoginService {
-    void login(Student student);
+    String login(Student student);
 }

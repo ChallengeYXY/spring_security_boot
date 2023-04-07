@@ -8,11 +8,9 @@ import org.springframework.context.annotation.Bean;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import javax.annotation.Resource;
+
 
 /**
- * @BelongsProject : spring_security_boot
- * @BelongsPackage : com.yangxinyu.app.config
  * @Date : 2023/3/20 15:02
  * @Author : 星宇
  * @Description :

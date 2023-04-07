@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yangxinyu.app.entity.Student;
 import com.yangxinyu.app.entity.User;
 import com.yangxinyu.app.mapper.StudentMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import java.util.Objects;
  * @Description :
  */
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource
     private StudentMapper studentMapper;
@@ -29,7 +31,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Student student = studentMapper.selectOne(new LambdaQueryWrapper<Student>()
                 .eq(Student::getUsername, username));
         //判断用户情况
-        Objects.requireNonNull(student);
+        if (Objects.isNull(student)){
+            log.warn("数据库不存在当前用户！");
+            throw new RuntimeException();
+        }
 
         //创建返回实体类
         return User.builder().student(student).build();

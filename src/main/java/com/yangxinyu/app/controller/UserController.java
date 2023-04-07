@@ -3,9 +3,7 @@ package com.yangxinyu.app.controller;
 import com.yangxinyu.app.entity.Result;
 import com.yangxinyu.app.entity.Student;
 import com.yangxinyu.app.service.LoginService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,8 +21,8 @@ public class UserController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public Result<String> login(Student student){
-        loginService.login(student);
-        return Result.ok(null);
+    public Result<String> login(@RequestBody Student student){
+        String token = loginService.login(student);
+        return Result.ok(200,"成功！",token);
     }
 }
